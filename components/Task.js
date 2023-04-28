@@ -1,27 +1,25 @@
 import React, {useState} from 'react';
 import { Switch, Touchable, TouchableOpacity } from "react-native";
 import {View, Text, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Task = (props) => {
     const [state, setState] = useState(false);
     const toggleSwitch = () => setState(previousState => !previousState);
 
-    const deleteTask = () => {
-        console.log(props);   
-    }
     return (
         <View style={styles.item}>
             <View style={styles.itemLeft}>
                 <Switch 
                     onValueChange={toggleSwitch}
                     value={state}
+                    style={styles.switch}
                 >
                 </Switch>
                 <Text style={styles.itemText}>{props.text}</Text>
             </View>
-            <TouchableOpacity style={styles.delete} onPress={() => deleteTask()}>
-                <Icon name='circle-with-cross' size={20} />
+            <TouchableOpacity style={styles.deleteButton} onPress={() => props.delete(props.id)}>
+                <Icon style={styles.deleteIcon} name='trash-outline' size={24} />
             </TouchableOpacity>
         </View>
     )
@@ -36,13 +34,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
     },
-    square: {
-        width: 24,
-        height: 24,
-        backgroundColor: '#55bcf6',
-        opacity: 0.4,
+    switch: {
         marginRight: 15,
-        borderRadius: 5,
     },
     itemLeft: {
         flexDirection: 'row',
@@ -52,7 +45,9 @@ const styles = StyleSheet.create({
     itemText: {
         maxWidth: '80%',
     },
-    circle: {},
+    deleteIcon: {
+        color: '#969696',
+    },
 })
 
 export default Task;

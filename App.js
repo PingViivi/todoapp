@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Keyboard, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Task from './components/Task';
 
 export default function App() {
@@ -13,13 +15,13 @@ export default function App() {
     setTask(null);
   }
 
-  /*
-  const deleteTask = (index) => {
+  
+  deleteTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   }
-*/
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -29,7 +31,7 @@ export default function App() {
             taskItems.map((item, index) => {
               return (
                 <View key={index}>
-                  <Task text={item} id={index}/>
+                  <Task text={item} id={index} delete={this.deleteTask}/>
                 </View>
               )
             })
@@ -44,7 +46,9 @@ export default function App() {
         <TextInput style={styles.input} placeholder={'write a task'} value={task} onChangeText={text => setTask(text)}/>
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
+            <Text style={styles.addText}>
+              <Icon  name='add-outline' size={24}></Icon>
+            </Text>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -79,20 +83,16 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-    borderRadius: '50%',
-    width: 250,
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
+    borderRadius: 50,
+    width: 260,
   },
   addWrapper: {
     width: 50,
     height: 50,
     backgroundColor: '#000',
-    borderRadius: '50%',
+    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
   },
   addText: {
     color: '#fff',

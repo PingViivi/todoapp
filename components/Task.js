@@ -1,13 +1,8 @@
 import React, {useState} from 'react';
-import { Switch, Touchable, TouchableOpacity } from "react-native";
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 const Task = (props) => {
-    const [state, setState] = useState(false);
-    const toggleSwitch = () => setState(previousState => !previousState);
-    
-
     return (
         <View style={styles.item}>
             <View style={styles.itemLeft}>
@@ -18,7 +13,6 @@ const Task = (props) => {
                     style={{ marginRight: 10 }}
                     onPress={props.setChecked}
                 />
-
                 <Text style={styles.itemText}>{props.text}</Text>
             </View>
             <TouchableOpacity style={styles.deleteButton} onPress={props.delete}>

@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Text, View, Keyboard, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Task from './components/Task';
@@ -8,7 +6,6 @@ import Task from './components/Task';
 const App = () => {
   const [value, setValue] = useState('')
   const [tasks, setTasks] = useState([]);
-  const Tab = createBottomTabNavigator();
 
   const handleAddTask = () => {
     Keyboard.dismiss();
@@ -33,6 +30,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}> To Do App </Text>
         <ScrollView syle={styles.items}>
@@ -65,6 +63,7 @@ const App = () => {
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
+
     </View>
   );
 }

@@ -1,49 +1,62 @@
 import React, {useState} from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Keyboard, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StyleSheet, Text, View, Keyboard, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Task from './components/Task';
 
-export default function App() {
-  const [task, setTask] = useState();
-  const [taskItems, setTaskItems] = useState([]);
+const App = () => {
+  const [value, setValue] = useState('')
+  const [tasks, setTasks] = useState([]);
+  const Tab = createBottomTabNavigator();
 
   const handleAddTask = () => {
     Keyboard.dismiss();
-    setTaskItems([...taskItems, task])
-    setTask(null);
+      if (value.length > 0) {
+        setTasks([...tasks, { text: value, key: Date.now(), checked:false }])
+        setValue('')
+      }
   }
 
-  
-  deleteTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
-  }
+  handleDeleteTask = (id) => {
+    setTasks( tasks.filter((task) => {
+        if (task.key !== id) return true
+    })
+  )}
+
+  handleChecked = (id) => {
+    setTasks( tasks.map((task) => {
+       if (task.key === id) task.checked = !task.checked;
+         return task;
+       })
+  )}
 
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}> To Do App </Text>
-        <View syle={styles.items}>
+        <ScrollView syle={styles.items}>
           {
-            taskItems.map((item, index) => {
+            tasks.map((task) => {
               return (
-                <View key={index}>
-                  <Task text={item} id={index} delete={this.deleteTask}/>
-                </View>
+                <Task 
+                  text={task.text} 
+                  key={task.key} 
+                  checked={task.checked}
+                  setChecked={() => handleChecked(task.key)}
+                  delete={() => handleDeleteTask(task.key)}
+                />
               )
             })
           }
-        </View>
+        </ScrollView>
       </View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.writeTaskWrapper}
       >
-        <TextInput style={styles.input} placeholder={'write a task'} value={task} onChangeText={text => setTask(text)}/>
+        <TextInput style={styles.input} placeholder={'write a task'} value={value} onChangeText={(value) => setValue(value)}/>
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>
@@ -64,6 +77,7 @@ const styles = StyleSheet.create({
   tasksWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
+    maxHeight: '82%',
   },
   sectionTitle: {
     fontSize: 24,
@@ -89,7 +103,7 @@ const styles = StyleSheet.create({
   addWrapper: {
     width: 50,
     height: 50,
-    backgroundColor: '#000',
+    backgroundColor: '#051F5F',
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
@@ -99,3 +113,5 @@ const styles = StyleSheet.create({
   },
 
 });
+
+export default App

@@ -1,25 +1,28 @@
 import React, {useState} from 'react';
 import { Switch, Touchable, TouchableOpacity } from "react-native";
 import {View, Text, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Feather';
 
 const Task = (props) => {
     const [state, setState] = useState(false);
     const toggleSwitch = () => setState(previousState => !previousState);
+    
 
     return (
         <View style={styles.item}>
             <View style={styles.itemLeft}>
-                <Switch 
-                    onValueChange={toggleSwitch}
-                    value={state}
-                    style={styles.switch}
-                >
-                </Switch>
+                <Icon
+                    name={props.checked ? "check-circle" : "circle"}
+                    size={24}
+                    color="#4754CD"
+                    style={{ marginRight: 10 }}
+                    onPress={props.setChecked}
+                />
+
                 <Text style={styles.itemText}>{props.text}</Text>
             </View>
-            <TouchableOpacity style={styles.deleteButton} onPress={() => props.delete(props.id)}>
-                <Icon style={styles.deleteIcon} name='trash-outline' size={24} />
+            <TouchableOpacity style={styles.deleteButton} onPress={props.delete}>
+                <Icon style={styles.deleteIcon} name='trash-2' size={24} />
             </TouchableOpacity>
         </View>
     )
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
     },
     deleteIcon: {
-        color: '#969696',
+        color: '#4754CD',
     },
 })
 

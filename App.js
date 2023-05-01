@@ -1,17 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Keyboard, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Task from './components/Task';
 
 const App = () => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('');
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [status, setStatus] = useState("all");
 
-  const handleAddTask = () => {
+  handleAddTask = () => {
     Keyboard.dismiss();
       if (value.length > 0) {
         setTasks([...tasks, { text: value, key: Date.now(), checked:false }])
         setValue('')
+        filterByStatus(status); // update filtered tasks immediately after adding a new task
       }
   }
 
@@ -19,23 +22,60 @@ const App = () => {
     setTasks( tasks.filter((task) => {
         if (task.key !== id) return true
     })
-  )}
+  )
+    filterByStatus(status);
+  }
 
   handleChecked = (id) => {
-    setTasks( tasks.map((task) => {
-       if (task.key === id) task.checked = !task.checked;
-         return task;
-       })
-  )}
+      setTasks( tasks.map((task) => {
+        if (task.key === id) task.checked = !task.checked;
+          return task;
+        })
+    )
+    filterByStatus(status);
+  }
+
+  filterByStatus = (status) => {
+    setStatus(status);
+    if (status === "checked") {
+      setFilteredTasks(tasks.filter((task) => task.checked === true));
+    } else if (status === "notchecked") {
+      setFilteredTasks(tasks.filter((task) => task.checked === false));
+    } else {
+      setFilteredTasks(tasks);
+    }
+  }
+
+  useEffect(() => {
+    filterByStatus(status);
+  }, [tasks, status]);
 
   return (
     <View style={styles.container}>
-
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}> To Do App </Text>
-        <ScrollView syle={styles.items}>
-          {
-            tasks.map((task) => {
+        <View style={styles.filtersWrapper}>
+          <TouchableOpacity
+            style={[styles.filterButton, status === "all" && styles.active]}
+            onPress={() => filterByStatus("all")}
+          >
+            <Text style={[styles.filterText, status === "all" && styles.activeText]}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterButton, status === "notchecked" && styles.active]}
+            onPress={() => filterByStatus("notchecked")}
+          >
+            <Text style={[styles.filterText, status === "notchecked" && styles.activeText]}>Active</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterButton, status === "checked" && styles.active]}
+            onPress={() => filterByStatus("checked")}
+          >
+            <Text style={[styles.filterText, status === "checked" && styles.activeText]}>Complete</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={styles.items}>
+          {filteredTasks.map((task) => {
               return (
                 <Task 
                   text={task.text} 
@@ -44,12 +84,10 @@ const App = () => {
                   setChecked={() => handleChecked(task.key)}
                   delete={() => handleDeleteTask(task.key)}
                 />
-              )
-            })
-          }
+              );
+            })}
         </ScrollView>
       </View>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.writeTaskWrapper}
@@ -63,7 +101,6 @@ const App = () => {
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-
     </View>
   );
 }
@@ -110,7 +147,30 @@ const styles = StyleSheet.create({
   addText: {
     color: '#fff',
   },
-
+  filtersWrapper: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  filterButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#C2CFEA',
+    color: '#fff',
+    paddingHorizontal: 24,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginRight: 14,
+  },
+  filterText: {
+    color: '#051F5F',
+    fontWeight: 'bold',
+  },
+  activeText: {
+    color: '#fff',
+  },
+  active: {
+    backgroundColor: '#051F5F',
+  },
 });
 
 export default App

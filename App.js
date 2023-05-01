@@ -9,15 +9,17 @@ const App = () => {
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [status, setStatus] = useState("all");
 
+  // function to add a new task to the tasks list
   handleAddTask = () => {
     Keyboard.dismiss();
-      if (value.length > 0) {
-        setTasks([...tasks, { text: value, key: Date.now(), checked:false }])
-        setValue('')
+      if (value.length > 0) { // check if the input value is not empty
+        setTasks([...tasks, { text: value, key: Date.now(), checked:false }]) // add the new task to the tasks list
+        setValue('')// clear the input value
         filterByStatus(status); // update filtered tasks immediately after adding a new task
       }
   }
 
+  // function to delete a task from the tasks list
   handleDeleteTask = (id) => {
     setTasks( tasks.filter((task) => {
         if (task.key !== id) return true
@@ -26,15 +28,17 @@ const App = () => {
     filterByStatus(status);
   }
 
+  // function to toggle the checked status of a task
   handleChecked = (id) => {
       setTasks( tasks.map((task) => {
-        if (task.key === id) task.checked = !task.checked;
+        if (task.key === id) task.checked = !task.checked; // toggle the checked status of the task with the given id
           return task;
         })
     )
     filterByStatus(status);
   }
 
+  // function to filter tasks by status (all, complete (=checked), active (=notchecked))
   filterByStatus = (status) => {
     setStatus(status);
     if (status === "checked") {
@@ -46,6 +50,7 @@ const App = () => {
     }
   }
 
+  // update filtered tasks after changes to the tasks list or filter status
   useEffect(() => {
     filterByStatus(status);
   }, [tasks, status]);
